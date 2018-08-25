@@ -25,10 +25,15 @@
     "sdk"
   ],
   "dependencies": {
-    "express": "^4.16.3"
+    "@types/express-session": "^1.15.10",
+    "axios": "^0.18.0",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "file-type": "^9.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
+    "@types/file-type": "^5.2.1",
     "del-cli": "^1.1.0",
     "prettier": "^1.14.2",
     "ts-node": "^7.0.1",

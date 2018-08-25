@@ -85,6 +85,8 @@ export const paymentsAuthorizationsCapture = (
   transactionId: string,
 ) => apiURL(baseURL, `payments/authorizations/${transactionId}/capture`);
 
+export const middlewareConfirm = (url: string) => apiURL(url, "/confirm");
+
 function isEmpty(obj: object): boolean {
   for (var prop in obj) {
     if (obj.hasOwnProperty(prop)) {
