@@ -177,8 +177,12 @@ export default class Client {
       `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
     );
 
-    options.confirmUrlType = options.confirmUrlType ? options.confirmUrlType : "CLIENT";
-    options.checkConfirmUrlBrowser = options.checkConfirmUrlBrowser ? options.checkConfirmUrlBrowser : false;
+    options.confirmUrlType = options.confirmUrlType
+      ? options.confirmUrlType
+      : "CLIENT";
+    options.checkConfirmUrlBrowser = options.checkConfirmUrlBrowser
+      ? options.checkConfirmUrlBrowser
+      : false;
     options.payType = options.payType ? options.payType : "NORMAL";
     options.capture = options.capture ? options.capture : true;
 
