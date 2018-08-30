@@ -86,11 +86,8 @@ export default class Client {
 
       const options = (config as any) as Types.OptionsReservePayment;
 
-      console.log("middleware reserve: ", options);
-
       this.reservePayment(options)
         .then(response => {
-          console.log(response);
           req.session.transactionId = response.info.transactionId;
           return res.redirect(response.info.paymentUrl.web);
         })
@@ -105,7 +102,6 @@ export default class Client {
       }
 
       const options = (config as any) as Types.OptionsConfirmPayment;
-      console.log("middleware confirm: ", options);
 
       this.confirmPayment(options)
         .then(response => {
@@ -180,6 +176,11 @@ export default class Client {
     const apiBaseUrl = URL.paymentsRequest(
       `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
     );
+
+    options.confirmUrlType = options.confirmUrlType ? options.confirmUrlType : "CLIENT";
+    options.checkConfirmUrlBrowser = options.checkConfirmUrlBrowser ? options.checkConfirmUrlBrowser : false;
+    options.payType = options.payType ? options.payType : "NORMAL";
+    options.capture = options.capture ? options.capture : true;
 
     return post(apiBaseUrl, this.headers, options)
       .then(response => {
@@ -419,6 +420,8 @@ export default class Client {
       `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
       options.regKey,
     );
+
+    options.capture = options.capture ? options.capture : true;
 
     return post(apiBaseUrl, this.headers, {
       productName: options.productName,
