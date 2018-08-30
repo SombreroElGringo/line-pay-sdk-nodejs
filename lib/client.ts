@@ -1,7 +1,5 @@
-import { Readable } from "stream";
 import { Router } from "express";
 import * as session from "express-session";
-import { JSONParseError } from "./exceptions";
 import { get, post } from "./http";
 import * as URL from "./urls";
 import * as Types from "./types";
@@ -9,21 +7,13 @@ import * as Constants from "./constants";
 
 const router: Router = Router();
 
-function checkJSON(raw: any): any {
-  if (typeof raw === "object") {
-    return raw;
-  } else {
-    throw new JSONParseError("Failed to parse response body as JSON", raw);
-  }
-}
-
 export default class Client {
   public config: Types.ClientConfig;
   public apiBaseUrl: string;
   public headers: Types.Headers;
 
   /**
-   *Creates an instance of Client.
+   * Creates an instance of Client.
    * @param {ClientConfig} config
    * @memberof Client
    */
@@ -50,15 +40,20 @@ export default class Client {
 
     this.config = config;
 
-    if (config.isSanbox) {
-      this.apiBaseUrl = Constants.SANDBOX_API_LINE_PAY_URL;
+    if (config.environment === "PROD") {
+      this.apiBaseUrl = Constants.API_LINE_PAY_URL;
+    } else if (config.environment === "BETA") {
+      this.apiBaseUrl = Constants.BETA_API_LINE_PAY_URL;
     } else {
-      this.apiBaseUrl = config.apiBaseUrl || Constants.API_LINE_PAY_URL;
+      this.apiBaseUrl = Constants.SANDBOX_API_LINE_PAY_URL;
     }
 
     this.headers = {
       "X-LINE-ChannelId": config.channelId,
       "X-LINE-ChannelSecret": config.channelSecret,
+      "X-LINE-MerchantDeviceType": config.merchantDeviceType
+        ? config.merchantDeviceType
+        : "",
       "Content-Type": "application/json",
     };
 
@@ -66,14 +61,117 @@ export default class Client {
   }
 
   /**
-   * Reserve a payment
-   *
-   * @param {OptionsReserve} options
-   * @returns
+   * Middleware to start payment flow.
+   * @param {Types.MiddlewareConfig} config
+   * @returns {Promise<any>}
    * @memberof Client
    */
-  public reserve(options: Types.OptionsReserve) {
-    Constants.RESERVE_REQUIRED_PARAMS.map(param => {
+  public middleware(config: Types.MiddlewareConfig): Types.Middleware {
+    router.get("/", (req, res, next) => {
+      Constants.MIDDLEWARE_CONFIG_REQUIRED_PARAMS.map(param => {
+        if (!options[param]) {
+          throw new Error(`Required param ${param} is missing`);
+        }
+      });
+
+      config.confirmUrl =
+        config.confirmUrl ||
+        URL.middlewareConfirm(`https://${req.hostname}${req.baseUrl}`);
+
+      req.session.productName = config.productName;
+      req.session.orderId = config.orderId;
+      req.session.amount = config.amount;
+      req.session.currency = config.currency;
+      req.session.confirmUrl = config.confirmUrl;
+
+      const options = (config as any) as Types.OptionsReservePayment;
+
+      console.log("middleware reserve: ", options);
+
+      this.reservePayment(options)
+        .then(response => {
+          console.log(response);
+          req.session.transactionId = response.info.transactionId;
+          return res.redirect(response.info.paymentUrl.web);
+        })
+        .catch(error => {
+          return res.status(400).json(error);
+        });
+    });
+
+    router.get("/confirm", (req, res, next) => {
+      if (!req.query || !req.query.transactionId) {
+        return res.status(400).send("Transaction id not found.");
+      }
+
+      const options = (config as any) as Types.OptionsConfirmPayment;
+      console.log("middleware confirm: ", options);
+
+      this.confirmPayment(options)
+        .then(response => {
+          next();
+        })
+        .catch(error => {
+          return res.status(500).json(error);
+        });
+    });
+
+    return router;
+  }
+
+  /**
+   * Get Payment Details API
+   *
+   * Gets the details of payments made with LINE Pay.
+   * This API only gets the payments that have been captured.
+   *
+   * @param {Types.OptionsGetPaymentDetails} options
+   * @returns {Promise<any>}
+   * @memberof Client
+   */
+  public getPaymentDetails(
+    options: Types.OptionsGetPaymentDetails,
+  ): Promise<any> {
+    Constants.GET_PAYMENT_DETAILS_REQUIRED_PARAMS.map(param => {
+      if (!options[param]) {
+        throw new Error(`Required param ${param} is missing`);
+      }
+    });
+
+    const apiBaseUrl = URL.payments(
+      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      options.transactionId,
+      options.orderId,
+    );
+
+    return get(apiBaseUrl, this.headers)
+      .then(response => {
+        const body = response;
+        if (body.returnCode && body.returnCode == "0000") {
+          return body;
+        } else {
+          return Promise.reject(new Error(body));
+        }
+      })
+      .catch(error => {
+        return Promise.reject(new Error(error));
+      });
+  }
+
+  /**
+   * Reserve Payment API
+   *
+   * Prior to processing payments with LINE Pay,
+   * the Merchant is evaluated if it is a normal Merchant store
+   * then the information is reserved for payment. When a payment is successfully reserved,
+   * the Merchant gets a "transaction Id" that is a key value used until the payment is completed or refunded.
+   *
+   * @param {OptionsReservePayment} options
+   * @returns {Promise<any>}
+   * @memberof Client
+   */
+  public reservePayment(options: Types.OptionsReservePayment): Promise<any> {
+    Constants.RESERVE_PAYMENT_REQUIRED_PARAMS.map(param => {
       if (!options[param]) {
         throw new Error(`Required param ${param} is missing`);
       }
@@ -83,33 +181,35 @@ export default class Client {
       `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
     );
 
-    console.log(apiBaseUrl);
-
     return post(apiBaseUrl, this.headers, options)
       .then(response => {
-        console.log("Reserve response : ", response);
-        const body = response.body;
+        console.log(response);
+        const body = response;
         if (body.returnCode && body.returnCode == "0000") {
-          console.log("Reserve paiement...");
           return body;
         } else {
           return Promise.reject(new Error(body));
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        return Promise.reject(new Error(error));
       });
   }
 
   /**
-   * Confirm a payment
+   * Payment Confirm API
    *
-   * @param {OptionsConfirm} options
-   * @returns
+   * This API is used for a Merchant to complete its payment.
+   * The Merchant must call Confirm Payment API to actually complete the payment.
+   * However, when "capture" parameter is "false" on payment reservation,
+   * the payment status becomes AUTHORIZATION, and the payment is completed only after "Capture API" is called.
+   *
+   * @param {OptionsConfirmPayment} options
+   * @returns {Promise<any>}
    * @memberof Client
    */
-  public confirm(options: Types.OptionsConfirm) {
-    Constants.CONFIRM_REQUIRED_PARAMS.map(param => {
+  public confirmPayment(options: Types.OptionsConfirmPayment): Promise<any> {
+    Constants.CONFIRM_PAYMENT_REQUIRED_PARAMS.map(param => {
       if (!options[param]) {
         throw new Error(`Required param ${param} is missing`);
       }
@@ -125,29 +225,191 @@ export default class Client {
       currency: options.currency,
     })
       .then(response => {
-        console.log("Confirm response : ", response);
-        const body = response.body;
+        const body = response;
         if (body.returnCode && body.returnCode == "0000") {
-          console.log("Payment has been confirmed");
+          return body;
+        } else {
+          return Promise.reject(new Error(body));
+        }
+      })
+      .catch(error => {
+        return Promise.reject(new Error(error));
+      });
+  }
+
+  /**
+   * Refund Payment API
+   *
+   * Requests refund of payments made with LINE Pay. To refund a payment,
+   * the LINE Pay user's payment transaction Id must be forwarded.
+   * A partial refund is also possible depending on the refund amount.
+   *
+   * @param {Types.OptionsRefundPayment} options
+   * @returns {Promise<any>}
+   * @memberof Client
+   */
+  public refundPayment(options: Types.OptionsRefundPayment): Promise<any> {
+    Constants.REFUND_PAYMENT_REQUIRED_PARAMS.map(param => {
+      if (!options[param]) {
+        throw new Error(`Required param ${param} is missing`);
+      }
+    });
+
+    const apiBaseUrl = URL.paymentsRefund(
+      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      options.transactionId,
+    );
+
+    const data = options.refundAmount
+      ? { refundAmount: options.refundAmount }
+      : {};
+
+    return post(apiBaseUrl, this.headers, data)
+      .then(response => {
+        const body = response;
+        if (body.returnCode && body.returnCode == "0000") {
+          return body;
+        } else {
+          return Promise.reject(new Error(body));
+        }
+      })
+      .catch(error => {
+        return Promise.reject(new Error(error));
+      });
+  }
+
+  /**
+   * Get Authorization Details API
+   *
+   * Gets the details authorized with LINE Pay.
+   * This API only gets data that is authorized or whose authorization is voided;
+   * the one that is already captured can be viewed by using "Get Payment Details API”.
+   *
+   * @param {OptionsGetAuthorizationDetails} options
+   * @returns {Promise<any>}
+   * @memberof Client
+   */
+  public getAuthorizationDetails(
+    options: Types.OptionsGetAuthorizationDetails,
+  ): Promise<any> {
+    Constants.GET_AUTHORIZATION_DETAILS_REQUIRED_PARAMS.map(param => {
+      if (!options[param]) {
+        throw new Error(`Required param ${param} is missing`);
+      }
+    });
+
+    const apiBaseUrl = URL.paymentsAuthorizations(
+      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      options.transactionId,
+      options.orderId,
+    );
+
+    return get(apiBaseUrl, this.headers)
+      .then(response => {
+        const body = response;
+        if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
           return Promise.reject(new Error(body));
         }
       })
       .catch(err => {
-        console.log(err);
+        return Promise.reject(new Error(err));
       });
   }
 
   /**
-   * Confirm preapproved payment
+   * Capture API
    *
-   * @param {OptionsConfirmPreApprovedPay} options
-   * @returns
+   * If "capture" is "false" when the Merchant calls the “Reserve Payment API” ,
+   * the payment is completed only after the Capture API is called.
+   *
+   * @param {OptionsCapture} options
+   * @returns {Promise<any>}
    * @memberof Client
    */
-  public confirmPreapprovedPay(options: Types.OptionsConfirmPreApprovedPay) {
-    Constants.CONFIRM_PREAPPROVED_PAY_REQUIRED_PARAMS.map(param => {
+  public capture(options: Types.OptionsCapture): Promise<any> {
+    Constants.CAPTURE_REQUIRED_PARAMS.map(param => {
+      if (!options[param]) {
+        throw new Error(`Required param ${param} is missing`);
+      }
+    });
+
+    const apiBaseUrl = URL.paymentsAuthorizationsCapture(
+      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      options.transactionId,
+    );
+
+    return post(apiBaseUrl, this.headers, {
+      amount: options.amount,
+      currency: options.currency,
+    })
+      .then(response => {
+        const body = response;
+        if (body.returnCode && body.returnCode == "0000") {
+          return body;
+        } else {
+          return Promise.reject(new Error(body));
+        }
+      })
+      .catch(error => {
+        return Promise.reject(new Error(error));
+      });
+  }
+
+  /**
+   * Void Authorization API
+   *
+   * Voids a previously authorized payment.
+   * A payment that has been already captured can be refunded by using the “Refund Payment API”
+   *
+   * @param {OptionsVoidAuthorization} options
+   * @returns {Promise<any>}
+   * @memberof Client
+   */
+  public voidAuthorization(
+    options: Types.OptionsVoidAuthorization,
+  ): Promise<any> {
+    Constants.VOID_AUTHORIZATION_REQUIRED_PARAMS.map(param => {
+      if (!options[param]) {
+        throw new Error(`Required param ${param} is missing`);
+      }
+    });
+
+    const apiBaseUrl = URL.paymentsAuthorizationsVoid(
+      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      options.transactionId,
+    );
+
+    return post(apiBaseUrl, this.headers, {})
+      .then(response => {
+        const body = response;
+        if (body.returnCode && body.returnCode == "0000") {
+          return body;
+        } else {
+          return Promise.reject(new Error(body));
+        }
+      })
+      .catch(err => {
+        return Promise.reject(new Error(err));
+      });
+  }
+
+  /**
+   * Preapproved Payment API
+   *
+   * When the payment type of the Reserve Payment API was set as PREAPPROVED,
+   * a regKey is returned with the payment result.
+   * Preapproved Payment API uses this regKey to directly complete a payment without using the LINE app.
+   *
+   * @param {OptionsPreApprovedPayment} options
+   * @returns {Promise<any>}
+   * @memberof Client
+   */
+  public preApprovedPayment(
+    options: Types.OptionsPreApprovedPayment,
+  ): Promise<any> {
+    Constants.PREAPPROVED_PAYMENT_REQUIRED_PARAMS.map(param => {
       if (!options[param]) {
         throw new Error(`Required param ${param} is missing`);
       }
@@ -158,35 +420,39 @@ export default class Client {
       options.regKey,
     );
 
-    console.log(
-      `Going to execute preapproved payment of orderId: ${options.orderId}...`,
-    );
-
-    return post(apiBaseUrl, this.headers, options)
+    return post(apiBaseUrl, this.headers, {
+      productName: options.productName,
+      amount: options.amount,
+      currency: options.currency,
+      orderId: options.orderId,
+      capture: options.capture,
+    })
       .then(response => {
-        console.log("Confirm preapproved pay response : ", response);
-        const body = response.body;
+        const body = response;
         if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed executing preapproved payment");
           return body;
         } else {
           return Promise.reject(new Error(body));
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        return Promise.reject(new Error(error));
       });
   }
 
   /**
-   * Check the availability of preapproved payment
+   * Check regKey Status API
    *
-   * @param {OptionsCheckPreApprovedPay} options
-   * @returns
+   * Checks if regKey is available before using the preapproved payment API.
+   *
+   * @param {OptionsCheckRegKeyStatus} options
+   * @returns {Promise<any>}
    * @memberof Client
    */
-  public checkPreapprovedPay(options: Types.OptionsCheckPreApprovedPay) {
-    Constants.CHECK_PREAPPROVED_PAY_REQUIRED_PARAMS.map(param => {
+  public checkRegKeyStatus(
+    options: Types.OptionsCheckRegKeyStatus,
+  ): Promise<any> {
+    Constants.CHECK_REGKEY_STATUS_REQUIRED_PARAMS.map(param => {
       if (!options[param]) {
         throw new Error(`Required param ${param} is missing`);
       }
@@ -202,29 +468,30 @@ export default class Client {
 
     return get(apiBaseUrl, this.headers)
       .then(response => {
-        console.log("Check preapproved pay response : ", response);
-        if (response.body.returnCode && response.body.returnCode == "0000") {
-          console.log(`Completed checking availability`);
-          return response.body;
+        const body = response;
+        if (body.returnCode && body.returnCode == "0000") {
+          return body;
         } else {
-          console.log(`Failed to check availability`);
-          return Promise.reject(new Error(response.body));
+          return Promise.reject(new Error(body));
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        return Promise.reject(new Error(error));
       });
   }
 
   /**
-   * Expire preapproved payment
+   * Expire regKey API
    *
-   * @param {OptionsExpirePreApprovedPay} options
-   * @returns
+   * Expires the regKey information registered for preapproved payment.
+   * Once the API is called, the regKey is no longer used for preapproved payments.
+   *
+   * @param {OptionsExpireRegKey} options
+   * @returns {Promise<any>}
    * @memberof Client
    */
-  public expirePreapprovedPay(options: Types.OptionsExpirePreApprovedPay) {
-    Constants.EXPIRE_PREAPPROVED_PAY_REQUIRED_PARAMS.map(param => {
+  public expireRegKey(options: Types.OptionsExpireRegKey): Promise<any> {
+    Constants.EXPIRE_REGKEY_REQUIRED_PARAMS.map(param => {
       if (!options[param]) {
         throw new Error(`Required param ${param} is missing`);
       }
@@ -235,220 +502,17 @@ export default class Client {
       options.regKey,
     );
 
-    console.log(
-      `Going to expire of preapproved payment for regKey: ${options.regKey}...`,
-    );
-
-    return post(apiBaseUrl, this.headers, options)
+    return post(apiBaseUrl, this.headers, {})
       .then(response => {
-        console.log("Expire preapproved pay response : ", response);
-        const body = response.body;
+        const body = response;
         if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed expiring preapproved payment");
           return body;
         } else {
-          console.log("Failed to expire preapprove payment");
           return Promise.reject(new Error(body));
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  /**
-   * Void authorized payment
-   *
-   * @param {OptionsVoidAuthorization} options
-   * @returns
-   * @memberof Client
-   */
-  public voidAuthorization(options: Types.OptionsVoidAuthorization) {
-    Constants.VOID_AUTHORIZATION_REQUIRED_PARAMS.map(param => {
-      if (!options[param]) {
-        throw new Error(`Required param ${param} is missing`);
-      }
-    });
-
-    const apiBaseUrl = URL.paymentsAuthorizationsVoid(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
-      options.transactionId,
-    );
-
-    return post(apiBaseUrl, this.headers, options)
-      .then(response => {
-        console.log("Void authorization response : ", response);
-        const body = response.body;
-        if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed void payment");
-          return body;
-        } else {
-          console.log("Failed to void payment");
-          return Promise.reject(new Error(body));
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  /**
-   * Inquire authorization
-   *
-   * @param {OptionsInquireAuthorization} options
-   * @returns
-   * @memberof Client
-   */
-  public inquireAuthorization(options: Types.OptionsInquireAuthorization) {
-    Constants.VOID_AUTHORIZATION_REQUIRED_PARAMS.map(param => {
-      if (!options[param]) {
-        throw new Error(`Required param ${param} is missing`);
-      }
-    });
-
-    const apiBaseUrl = URL.paymentsAuthorizations(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
-      options.transactionId,
-      options.orderId,
-    );
-
-    console.log("Going to inquire authorization...");
-
-    return get(apiBaseUrl, this.headers)
-      .then(response => {
-        console.log("Inquire authorization response : ", response);
-        const body = response.body;
-        if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed inquiring authorization");
-          return body;
-        } else {
-          console.log("Failed to inquiring authorization");
-          return Promise.reject(new Error(body));
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  /**
-   * Capture payment
-   *
-   * @param {OptionsCapture} options
-   * @returns
-   * @memberof Client
-   */
-  public capture(options: Types.OptionsCapture) {
-    Constants.CAPTURE_REQUIRED_PARAMS.map(param => {
-      if (!options[param]) {
-        throw new Error(`Required param ${param} is missing`);
-      }
-    });
-
-    const apiBaseUrl = URL.paymentsAuthorizationsCapture(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
-      options.transactionId,
-    );
-
-    console.log("Going to capture payment...");
-
-    return post(apiBaseUrl, this.headers, {
-      amount: options.amount,
-      currency: options.currency,
-    })
-      .then(response => {
-        console.log("Capture response : ", response);
-        const body = response.body;
-        if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed capturing payment");
-          return body;
-        } else {
-          console.log("Failed to capture payment");
-          return Promise.reject(new Error(body));
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  /**
-   * Inquire payment
-   *
-   * @param {OptionsInquirePayment} options
-   * @returns
-   * @memberof Client
-   */
-  public inquirePayment(options: Types.OptionsInquirePayment) {
-    Constants.INQUIRE_PAYMENT_REQUIRED_PARAMS.map(param => {
-      if (!options[param]) {
-        throw new Error(`Required param ${param} is missing`);
-      }
-    });
-
-    const apiBaseUrl = URL.payments(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
-      options.transactionId,
-      options.orderId,
-    );
-
-    console.log("Going to inquire payment...");
-
-    return get(apiBaseUrl, this.headers)
-      .then(response => {
-        console.log("Inquire authorization response : ", response);
-        const body = response.body;
-        if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed inquiring payment");
-          return body;
-        } else {
-          console.log("Failed to inquiring payment");
-          return Promise.reject(new Error(body));
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  /**
-   * Refund payment
-   *
-   * @param {Types.OptionsRefund} options
-   * @returns
-   * @memberof Client
-   */
-  public refund(options: Types.OptionsRefund) {
-    Constants.REFUND_REQUIRED_PARAMS.map(param => {
-      if (!options[param]) {
-        throw new Error(`Required param ${param} is missing`);
-      }
-    });
-
-    const apiBaseUrl = URL.paymentsRefund(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
-      options.transactionId,
-    );
-
-    console.log("Going to refund payment...");
-
-    return post(apiBaseUrl, this.headers, {
-      amount: options.amount,
-      currency: options.currency,
-    })
-      .then(response => {
-        console.log("Capture response : ", response);
-        const body = response.body;
-        if (body.returnCode && body.returnCode == "0000") {
-          console.log("Completed refunding payment");
-          return body;
-        } else {
-          console.log("Failed to refund payment");
-          return Promise.reject(new Error(body));
-        }
-      })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        return Promise.reject(new Error(error));
       });
   }
 }
