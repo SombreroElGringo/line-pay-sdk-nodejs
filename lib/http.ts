@@ -3,23 +3,20 @@ import { HTTPError, ReadError, RequestError } from "./exceptions";
 
 const pkg = require("../package.json");
 
-function wrapError(err: AxiosError) {
-  if (err.response) {
+function wrapError(error: AxiosError) {
+  if (error.response) {
     throw new HTTPError(
-      err.message,
-      err.response.status,
-      err.response.statusText,
-      err,
+      error.message,
+      error.response.status,
+      error.response.statusText,
+      error,
     );
-  } else if (err.code) {
-    throw new RequestError(err.message, err.code, err);
-  } else if (err.config) {
-    // unknown, but from axios
-    throw new ReadError(err);
+  } else if (error.code) {
+    throw new RequestError(error.message, error.code, error);
+  } else if (error.config) {
+    throw new ReadError(error);
   }
-
-  // otherwise, just rethrow
-  throw err;
+  throw error;
 }
 
 const userAgent = `${pkg.name}/${pkg.version}`;
