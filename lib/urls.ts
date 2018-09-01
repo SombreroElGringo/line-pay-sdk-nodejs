@@ -8,7 +8,8 @@ import {
 const apiURL = (baseURL: string, path: string, query?: object) =>
   baseURL + path + (query ? `?${qs.stringify(query)}` : "");
 
-export const middlewareConfirm = (url: string) => apiURL(url, "/confirm");
+export const middlewareConfirm = (baseURL: string) =>
+  apiURL(baseURL, "confirm");
 
 export const payments = (
   baseURL: string,

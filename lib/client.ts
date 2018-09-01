@@ -76,7 +76,7 @@ export default class Client {
 
       config.confirmUrl =
         config.confirmUrl ||
-        URL.middlewareConfirm(`https://${req.hostname}${req.baseUrl}`);
+        URL.middlewareConfirm(`https://${req.hostname}${req.baseUrl}/`);
 
       req.session.productName = config.productName;
       req.session.orderId = config.orderId;
