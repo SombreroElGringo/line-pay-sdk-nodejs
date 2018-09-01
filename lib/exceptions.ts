@@ -1,19 +1,3 @@
-export class LinePayError extends Error {
-  constructor(
-    message: string,
-    public code: string,
-    private originalError: Error,
-  ) {
-    super(message);
-  }
-}
-
-export class JSONParseError extends Error {
-  constructor(message: string, public raw: any) {
-    super(message);
-  }
-}
-
 export class RequestError extends Error {
   constructor(
     message: string,

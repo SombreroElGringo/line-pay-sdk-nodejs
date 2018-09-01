@@ -15,7 +15,7 @@ export const MIDDLEWARE_CONFIG_REQUIRED_PARAMS = [
   "orderId",
 ];
 
-export const GET_PAYMENT_DETAILS_REQUIRED_PARAMS = ["transactionId", "orderId"];
+export const GET_PAYMENT_DETAILS_REQUIRED_PARAMS: string[] = [];
 
 export const RESERVE_PAYMENT_REQUIRED_PARAMS = [
   "productName",

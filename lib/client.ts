@@ -9,7 +9,7 @@ const router: Router = Router();
 
 export default class Client {
   public config: Types.ClientConfig;
-  public apiBaseUrl: string;
+  public apiUrl: string;
   public headers: Types.Headers;
 
   /**
@@ -38,15 +38,16 @@ export default class Client {
           : false,
     };
 
-    this.config = config;
-
     if (config.environment === "PROD") {
-      this.apiBaseUrl = Constants.API_LINE_PAY_URL;
+      this.apiUrl = Constants.API_LINE_PAY_URL;
     } else if (config.environment === "BETA") {
-      this.apiBaseUrl = Constants.BETA_API_LINE_PAY_URL;
+      this.apiUrl = Constants.BETA_API_LINE_PAY_URL;
     } else {
-      this.apiBaseUrl = Constants.SANDBOX_API_LINE_PAY_URL;
+      config.environment = "SANDBOX";
+      this.apiUrl = Constants.SANDBOX_API_LINE_PAY_URL;
     }
+
+    this.config = config;
 
     this.headers = {
       "X-LINE-ChannelId": config.channelId,
@@ -133,24 +134,22 @@ export default class Client {
         throw new Error(`Required param ${param} is missing`);
       }
     });
-
     const apiBaseUrl = URL.payments(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.transactionId,
       options.orderId,
     );
-
     return get(apiBaseUrl, this.headers)
       .then(response => {
         const body = response;
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -174,7 +173,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsRequest(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
     );
 
     options.confirmUrlType = options.confirmUrlType
@@ -188,16 +187,15 @@ export default class Client {
 
     return post(apiBaseUrl, this.headers, options)
       .then(response => {
-        console.log(response);
         const body = response;
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -221,7 +219,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsConfirm(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.transactionId,
     );
 
@@ -234,11 +232,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -261,7 +259,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsRefund(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.transactionId,
     );
 
@@ -275,11 +273,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -304,7 +302,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsAuthorizations(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.transactionId,
       options.orderId,
     );
@@ -315,11 +313,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
-      .catch(err => {
-        return Promise.reject(new Error(err));
+      .catch(error => {
+        return Promise.reject(error);
       });
   }
 
@@ -341,7 +339,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsAuthorizationsCapture(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.transactionId,
     );
 
@@ -354,11 +352,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -382,7 +380,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsAuthorizationsVoid(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.transactionId,
     );
 
@@ -392,11 +390,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
-      .catch(err => {
-        return Promise.reject(new Error(err));
+      .catch(error => {
+        return Promise.reject(error);
       });
   }
 
@@ -421,7 +419,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsPreApprovedPayPayment(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.regKey,
     );
 
@@ -439,11 +437,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -468,7 +466,7 @@ export default class Client {
     const creditCardAuth = options.creditCardAuth ? true : false;
 
     const apiBaseUrl = URL.paymentsPreApprovedPayCheck(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.regKey,
       creditCardAuth,
     );
@@ -479,11 +477,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 
@@ -505,7 +503,7 @@ export default class Client {
     });
 
     const apiBaseUrl = URL.paymentsPreApprovedPayExpire(
-      `${this.apiBaseUrl}/${Constants.API_VERSION}/`,
+      `${this.apiUrl}/${Constants.API_VERSION}/`,
       options.regKey,
     );
 
@@ -515,11 +513,11 @@ export default class Client {
         if (body.returnCode && body.returnCode == "0000") {
           return body;
         } else {
-          return Promise.reject(new Error(body));
+          return Promise.reject(body);
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error));
+        return Promise.reject(error);
       });
   }
 }

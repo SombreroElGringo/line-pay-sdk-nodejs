@@ -9,102 +9,102 @@ const TEST_CREDIT_CARD_AUTH = true;
 
 describe("urls", () => {
   it("• middlewareConfirm", () => {
-    equal(`${TEST_BASE_URL}confirm`, URL.middlewareConfirm(TEST_BASE_URL));
+    equal(URL.middlewareConfirm(TEST_BASE_URL), `${TEST_BASE_URL}confirm`);
   });
 
   it("• payments with query", () => {
     equal(
-      `${TEST_BASE_URL}payments?transactionId=${TEST_TRANSACTION_ID}&orderId=${TEST_ORDER_ID}`,
       URL.payments(TEST_BASE_URL, TEST_TRANSACTION_ID, TEST_ORDER_ID),
+      `${TEST_BASE_URL}payments?transactionId=${TEST_TRANSACTION_ID}&orderId=${TEST_ORDER_ID}`,
     );
   });
 
   it("• payments without query", () => {
-    equal(`${TEST_BASE_URL}payments`, URL.payments(TEST_BASE_URL));
+    equal(URL.payments(TEST_BASE_URL), `${TEST_BASE_URL}payments`);
   });
 
   it("• paymentsRequest", () => {
     equal(
-      `${TEST_BASE_URL}payments/request`,
       URL.paymentsRequest(TEST_BASE_URL),
+      `${TEST_BASE_URL}payments/request`,
     );
   });
 
   it("• paymentsConfirm", () => {
     equal(
-      `${TEST_BASE_URL}payments/${TEST_TRANSACTION_ID}/confirm`,
       URL.paymentsConfirm(TEST_BASE_URL, TEST_TRANSACTION_ID),
+      `${TEST_BASE_URL}payments/${TEST_TRANSACTION_ID}/confirm`,
     );
   });
 
   it("• paymentsRefund", () => {
     equal(
-      `${TEST_BASE_URL}payments/${TEST_TRANSACTION_ID}/refund`,
       URL.paymentsRefund(TEST_BASE_URL, TEST_TRANSACTION_ID),
+      `${TEST_BASE_URL}payments/${TEST_TRANSACTION_ID}/refund`,
     );
   });
 
   it("• paymentsAuthorizations with query", () => {
     equal(
-      `${TEST_BASE_URL}payments/authorizations?transactionId=${TEST_TRANSACTION_ID}&orderId=${TEST_ORDER_ID}`,
       URL.paymentsAuthorizations(
         TEST_BASE_URL,
         TEST_TRANSACTION_ID,
         TEST_ORDER_ID,
       ),
+      `${TEST_BASE_URL}payments/authorizations?transactionId=${TEST_TRANSACTION_ID}&orderId=${TEST_ORDER_ID}`,
     );
   });
 
   it("• paymentsAuthorizations without query", () => {
     equal(
-      `${TEST_BASE_URL}payments/authorizations`,
       URL.paymentsAuthorizations(TEST_BASE_URL),
+      `${TEST_BASE_URL}payments/authorizations`,
     );
   });
 
   it("• paymentsAuthorizationsCapture", () => {
     equal(
-      `${TEST_BASE_URL}payments/authorizations/${TEST_TRANSACTION_ID}/capture`,
       URL.paymentsAuthorizationsCapture(TEST_BASE_URL, TEST_TRANSACTION_ID),
+      `${TEST_BASE_URL}payments/authorizations/${TEST_TRANSACTION_ID}/capture`,
     );
   });
 
   it("• paymentsAuthorizationsVoid", () => {
     equal(
-      `${TEST_BASE_URL}payments/authorizations/${TEST_TRANSACTION_ID}/void`,
       URL.paymentsAuthorizationsVoid(TEST_BASE_URL, TEST_TRANSACTION_ID),
+      `${TEST_BASE_URL}payments/authorizations/${TEST_TRANSACTION_ID}/void`,
     );
   });
 
   it("• paymentsPreApprovedPayPayment", () => {
     equal(
-      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/payment`,
       URL.paymentsPreApprovedPayPayment(TEST_BASE_URL, TEST_REG_KEY),
+      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/payment`,
     );
   });
 
   it("• paymentsPreApprovedPayCheck with query", () => {
     equal(
-      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/check?creditCardAuth=true`,
       URL.paymentsPreApprovedPayCheck(
         TEST_BASE_URL,
         TEST_REG_KEY,
         TEST_CREDIT_CARD_AUTH,
       ),
+      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/check?creditCardAuth=true`,
     );
   });
 
   it("• paymentsPreApprovedPayCheck without query", () => {
     equal(
-      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/check`,
       URL.paymentsPreApprovedPayCheck(TEST_BASE_URL, TEST_REG_KEY),
+      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/check`,
     );
   });
 
   it("• paymentsPreApprovedPayExpire", () => {
     equal(
-      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/expire`,
       URL.paymentsPreApprovedPayExpire(TEST_BASE_URL, TEST_REG_KEY),
+      `${TEST_BASE_URL}payments/preapprovedPay/${TEST_REG_KEY}/expire`,
     );
   });
 });
