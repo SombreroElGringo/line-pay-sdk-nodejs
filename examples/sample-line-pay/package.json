@@ -1,0 +1,26 @@
+{
+  "name": "sample-line-pay",
+  "version": "1.0.0",
+  "description": "Sample LINE Pay",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "line",
+    "pay",
+    "sdk"
+  ],
+  "author": "SombreroElGringo",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "line-pay-sdk": "^1.0.2",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "dotenv": "^6.0.0"
+  }
+}
