@@ -70,7 +70,7 @@ export default class Client {
   public middleware(config: Types.MiddlewareConfig): Types.Middleware {
     router.get("/", (req, res, next) => {
       Constants.MIDDLEWARE_CONFIG_REQUIRED_PARAMS.map(param => {
-        if (!options[param]) {
+        if (!config[param]) {
           throw new Error(`Required param ${param} is missing`);
         }
       });
@@ -102,7 +102,8 @@ export default class Client {
         return res.status(400).send("Transaction id not found.");
       }
 
-      const options = (config as any) as Types.OptionsConfirmPayment;
+      let options = (config as any) as Types.OptionsConfirmPayment;
+      options.transactionId = req.query.transactionId;
 
       this.confirmPayment(options)
         .then(response => {
