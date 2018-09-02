@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Client | line-pay-sdk-nodejs</title>
+    <meta name="description" content="Node.js SDK for LINE Pay API">
+    
+    
+    <link rel="preload" href="/line-pay-sdk-nodejs/assets/css/0.styles.962942f7.css" as="style"><link rel="preload" href="/line-pay-sdk-nodejs/assets/js/app.def3ecd0.js" as="script"><link rel="preload" href="/line-pay-sdk-nodejs/assets/js/7.81087312.js" as="script"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/9.c36bcc5e.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/2.cda51ec0.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/3.04e3dd65.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/4.5c3ce35c.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/5.1048f9f3.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/6.f0af2685.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/8.e9a015c1.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/10.46d7b27b.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/11.2a6eee94.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/12.be2e0d67.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/13.b1dd1302.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/14.9c660b9f.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/15.b1e83004.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/16.f64e2fd3.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/17.61cb43a4.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/18.eede2ae9.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/19.414752b8.js"><link rel="prefetch" href="/line-pay-sdk-nodejs/assets/js/20.19826540.js">
+    <link rel="stylesheet" href="/line-pay-sdk-nodejs/assets/css/0.styles.962942f7.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/line-pay-sdk-nodejs/" class="home-link router-link-active"><!----> <span class="site-name">line-pay-sdk-nodejs</span></a> <div class="links" style="max-width:nullpx;"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/line-pay-sdk-nodejs/" class="nav-link">Introduction</a></div><div class="nav-item"><a href="/line-pay-sdk-nodejs/getting-started/requirements.html" class="nav-link">Getting Started</a></div><div class="nav-item"><a href="/line-pay-sdk-nodejs/api-reference/client.html" class="nav-link router-link-exact-active router-link-active">API Reference</a></div><div class="nav-item"><a href="https://line.me/en/pay" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LINE Pay
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="https://developers.line.me/en/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LINE Developers
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="https://github.com/SombreroElGringo/line-pay-sdk-nodejs/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/line-pay-sdk-nodejs/" class="nav-link">Introduction</a></div><div class="nav-item"><a href="/line-pay-sdk-nodejs/getting-started/requirements.html" class="nav-link">Getting Started</a></div><div class="nav-item"><a href="/line-pay-sdk-nodejs/api-reference/client.html" class="nav-link router-link-exact-active router-link-active">API Reference</a></div><div class="nav-item"><a href="https://line.me/en/pay" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LINE Pay
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="https://developers.line.me/en/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LINE Developers
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="nav-item"><a href="https://github.com/SombreroElGringo/line-pay-sdk-nodejs/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <ul class="sidebar-links"><li><div class="sidebar-group first"><p class="sidebar-heading"><span>Introduction</span> <!----></p> <ul class="sidebar-group-items"><li><a href="/line-pay-sdk-nodejs/" class="sidebar-link">line-pay-sdk-nodejs</a></li></ul></div></li><li><div class="sidebar-group"><p class="sidebar-heading"><span>Getting Started</span> <!----></p> <ul class="sidebar-group-items"><li><a href="/line-pay-sdk-nodejs/getting-started/requirements.html" class="sidebar-link">Requirements</a></li><li><a href="/line-pay-sdk-nodejs/getting-started/install.html" class="sidebar-link">Install</a></li><li><a href="/line-pay-sdk-nodejs/getting-started/basic-usage.html" class="sidebar-link">Basic Usage</a></li><li><a href="/line-pay-sdk-nodejs/getting-started/create-sandbox.html" class="sidebar-link">Create sandbox</a></li></ul></div></li><li><div class="sidebar-group"><p class="sidebar-heading open"><span>API Reference</span> <!----></p> <ul class="sidebar-group-items"><li><a href="/line-pay-sdk-nodejs/api-reference/client.html" class="active sidebar-link">Client</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/line-pay-sdk-nodejs/api-reference/client.html#type-signature" class="sidebar-link">Type signature</a></li><li class="sidebar-sub-header"><a href="/line-pay-sdk-nodejs/api-reference/client.html#usage" class="sidebar-link">Usage</a></li></ul></li><li><a href="/line-pay-sdk-nodejs/api-reference/middleware.html" class="sidebar-link">Middleware</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/get-payment-details.html" class="sidebar-link">Get Payment Details</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/reserve-payment.html" class="sidebar-link">Reserve Payment</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/payment-confirm.html" class="sidebar-link">Payment Confirm</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/refund-payment.html" class="sidebar-link">Refund Payment</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/get-authorization-details.html" class="sidebar-link">Get Authorization Details</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/capture.html" class="sidebar-link">Capture</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/void-authorization.html" class="sidebar-link">Void Authorization</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/preapproved-payment.html" class="sidebar-link">Preapproved Payment</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/check-regkey-status.html" class="sidebar-link">Check regKey Status</a></li><li><a href="/line-pay-sdk-nodejs/api-reference/expire-regkey.html" class="sidebar-link">Expire regKey</a></li></ul></div></li></ul> </div> <div class="page"> <div class="content"><h1 id="client"><a href="#client" aria-hidden="true" class="header-anchor">#</a> Client</h1> <p>A client instance provides functions for LINE Pay APIs, so that you do not need to worry about HTTP requests and can focus on data. For type signatures of the methods.</p> <h2 id="type-signature"><a href="#type-signature" aria-hidden="true" class="header-anchor">#</a> Type signature</h2> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">class</span> <span class="token class-name">Client</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> config<span class="token punctuation">:</span> ClientConfig<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> apiUrl<span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> headers<span class="token punctuation">:</span> Headers<span class="token punctuation">;</span>
+
+    <span class="token keyword">constructor</span><span class="token punctuation">(</span>config<span class="token punctuation">:</span> ClientConfig<span class="token punctuation">)</span>
+
+    <span class="token function">middleware</span><span class="token punctuation">(</span>config<span class="token punctuation">:</span> MiddlewareConfig<span class="token punctuation">)</span><span class="token punctuation">:</span> Middleware 
+
+    <span class="token function">getPaymentDetails</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsGetPaymentDetails<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">reservePayment</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsReservePayment<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">confirmPayment</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsConfirmPayment<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">refundPayment</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsRefundPayment<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">getAuthorizationDetails</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsGetAuthorizationDetails<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">capture</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsCapture<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">voidAuthorization</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsVoidAuthorization<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">preApprovedPayment</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsPreApprovedPayment<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">checkRegKeyStatus</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsCheckRegKeyStatus<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+    <span class="token function">expireRegKey</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> OptionsExpireRegKey<span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>The types of ClientConfig &amp; Headers :</p> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">type</span> ClientConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * Payment Integration Information - Channel ID
+   */</span>
+  channelId<span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Payment Integration Information - Channel Secret Key
+   */</span>
+  channelSecret<span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   *  Environments:
+   *
+   * - PROD: https://api-pay.line.me  =&gt; Real Service Environment
+   * - BETA: https://lgw-pay.line-apps-beta.com =&gt; Testing environment that is available only in the LINE office network
+   * - SANDBOX(Default Value): https://sandbox-api-pay.line.me =&gt; Environment for integration testing
+   */</span>
+  environment<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token string">&quot;PROD&quot;</span> <span class="token operator">|</span> <span class="token string">&quot;BETA&quot;</span> <span class="token operator">|</span> <span class="token string">&quot;SANDBOX&quot;</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Offline Support - Device Type
+   * Add it to defining it in the header
+   * (20 Bytes)
+   */</span>
+  merchantDeviceType<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Express session options
+   */</span>
+  sessionOptions<span class="token operator">?</span><span class="token punctuation">:</span> ExpressSessionConfig<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">type</span> ExpressSessionConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * This is the secret used to sign the session ID cookie.
+   * False by default.
+   */</span>
+  secret<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Forces the session to be saved back to the session store,
+   * even if the session was never modified during the request.
+   * False by default.
+   */</span>
+  resave<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Forces a session that is &quot;uninitialized&quot; to be saved to the store.
+   * False by default.
+   */</span>
+  saveUninitialized<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">type</span> Headers <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">&quot;Content-Type&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;application/json&quot;</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Payment Integration Information - Channel ID
+   * (10 Bytes)
+   */</span>
+  <span class="token string">&quot;X-LINE-ChannelId&quot;</span><span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Payment Integration Information - Channel Secret Key
+   * (32 Bytes)
+   */</span>
+  <span class="token string">&quot;X-LINE-ChannelSecret&quot;</span><span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token comment">/**
+   * Offline Support - Device Type
+   * (20 Bytes)
+   */</span>
+  <span class="token string">&quot;X-LINE-MerchantDeviceType&quot;</span><span class="token operator">?</span><span class="token punctuation">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="usage"><a href="#usage" aria-hidden="true" class="header-anchor">#</a> Usage</h2> <p>The <code>Client</code> class is provided by the main module.
+To create a client instance in CommonJS:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// CommonJS</span>
+<span class="token keyword">const</span> line <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'line-pay-sdk'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">line<span class="token punctuation">.</span>Client</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    channelId<span class="token punctuation">:</span> <span class="token string">&quot;YOUR_LINE_PAY_CHANNEL_ID&quot;</span><span class="token punctuation">,</span>
+    channelSecret<span class="token punctuation">:</span> <span class="token string">&quot;YOUR_LINE_PAY_CHANNEL_SECRET&quot;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token operator">...</span>
+
+client<span class="token punctuation">.</span><span class="token function">reservePayment</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>response <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span>error <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>To create a client instance in <code>ES6</code> or <code>Typescript</code>:</p> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token comment">// ES6 modules or TypeScript</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Client <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'line-pay-sdk'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> client<span class="token punctuation">:</span> Client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Client</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    channelId<span class="token punctuation">:</span> <span class="token string">&quot;YOUR_LINE_PAY_CHANNEL_ID&quot;</span><span class="token punctuation">,</span>
+    channelSecret<span class="token punctuation">:</span> <span class="token string">&quot;YOUR_LINE_PAY_CHANNEL_SECRET&quot;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token operator">...</span>
+
+client<span class="token punctuation">.</span><span class="token function">reservePayment</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>response <span class="token operator">=&gt;</span> <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span>error <span class="token operator">=&gt;</span> <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div></div> <div class="page-edit"><!----> <!----></div> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/line-pay-sdk-nodejs/getting-started/create-sandbox.html" class="prev">
+          Create sandbox
+        </a></span> <span class="next"><a href="/line-pay-sdk-nodejs/api-reference/middleware.html">
+          Middleware
+        </a>
+        →
+      </span></p></div> </div> <!----></div></div>
+    <script src="/line-pay-sdk-nodejs/assets/js/7.81087312.js" defer></script><script src="/line-pay-sdk-nodejs/assets/js/app.def3ecd0.js" defer></script>
+  </body>
+</html>
