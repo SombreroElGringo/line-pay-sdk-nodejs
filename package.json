@@ -1,19 +1,25 @@
 {
-  "name": "line-pay-sdk-nodejs",
+  "name": "line-pay-sdk",
   "version": "1.0.0",
   "description": "Node.js SDK for LINE Pay",
   "main": "dist/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "docs",
+    "lib"
+  ],
   "scripts": {
     "test": "TEST_PORT=1234 nyc mocha",
     "prettier": "prettier --parser typescript --trailing-comma all \"{lib,test}/**/*.ts\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- -l",
     "clean": "del-cli dist",
-    "build": "tsc"
+    "build": "tsc",
+    "docs": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "docs:deploy": "./deploy-docs.sh",
+    "release": "npm run build && npm publish --access public"
   },
   "repository": {
     "type": "git",
@@ -39,7 +45,8 @@
     "nyc": "^13.0.1",
     "prettier": "^1.14.2",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.1"
+    "typescript": "^3.0.1",
+    "vuepress": "^0.14.2"
   },
   "nyc": {
     "require": [

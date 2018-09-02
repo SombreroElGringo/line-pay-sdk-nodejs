@@ -13,8 +13,8 @@ export const middlewareConfirm = (baseURL: string) =>
 
 export const payments = (
   baseURL: string,
-  transactionId?: string,
-  orderId?: string,
+  transactionId?: string | string[],
+  orderId?: string | string[],
 ) => {
   let query: QueryGetPaymentDetails = {};
   if (transactionId) {
@@ -37,8 +37,8 @@ export const paymentsRefund = (baseURL: string, transactionId: string) =>
 
 export const paymentsAuthorizations = (
   baseURL: string,
-  transactionId?: string,
-  orderId?: string,
+  transactionId?: string | string[],
+  orderId?: string | string[],
 ) => {
   let query: QueryGetAuthorizationDetails = {};
   if (transactionId) {

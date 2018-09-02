@@ -132,12 +132,12 @@ export type OptionsGetPaymentDetails = {
   /**
    * A transaction ID issued by LINE Pay, for payment or refund.
    */
-  transactionId?: string;
+  transactionId?: string | string[];
   /**
    * Merchant Transaction Order ID
    */
-  orderId?: string;
-  [key: string]: string;
+  orderId?: string | string[];
+  [key: string]: string | string[];
 };
 
 export type OptionsReservePayment = {
@@ -273,7 +273,7 @@ export type OptionsReservePayment = {
    */
   capture?: boolean;
   /**
-   *
+   * Extra fields
    */
   extras?: Extras;
   [key: string]: string | number | boolean | Extras;
@@ -353,12 +353,12 @@ export type OptionsGetAuthorizationDetails = {
   /**
    * Transaction number issued by LINE Pay
    */
-  transactionId?: string;
+  transactionId?: string | string[];
   /**
    * Order number of Merchant
    */
-  orderId?: string;
-  [key: string]: string;
+  orderId?: string | string[];
+  [key: string]: string | string[];
 };
 
 export type OptionsCapture = {
@@ -472,22 +472,22 @@ export type QueryGetPaymentDetails = {
   /**
    * A transaction ID issued by LINE Pay, for payment or refund.
    */
-  transactionId?: string;
+  transactionId?: string | string[];
   /**
    * Merchant Transaction Order ID
    */
-  orderId?: string;
+  orderId?: string | string[];
 };
 
 export type QueryGetAuthorizationDetails = {
   /**
    * A transaction ID issued by LINE Pay, for payment or refund.
    */
-  transactionId?: string;
+  transactionId?: string | string[];
   /**
    * Merchant Transaction Order ID
    */
-  orderId?: string;
+  orderId?: string | string[];
 };
 
 export type QueryCheckRegKeyStatus = {
