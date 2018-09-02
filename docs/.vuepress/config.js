@@ -1,11 +1,5 @@
 module.exports = {
   base: "/line-pay-sdk-nodejs/",
-  head: [
-    ["link", {
-      rel: "icon",
-      href: "/favicon.ico"
-    }]
-  ],
   title: "line-pay-sdk-nodejs",
   description: "Node.js SDK for LINE Pay API",
   themeConfig: {
