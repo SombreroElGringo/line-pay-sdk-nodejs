@@ -48,7 +48,9 @@ client.confirmPayment(options)
 ## Result Code
 
 * 0000: Successful
-* 1101: The purchasing user suspended for transaction. 1102: The purchasing user suspended for transaction. 1104: Merchant not found.
+* 1101: The purchasing user suspended for transaction. 
+* 1102: The purchasing user suspended for transaction. 
+* 1104: Merchant not found.
 * 1105: This Merchant cannot use LINE Pay.
 * 1106: Header information error
 * 1110: Not available credit card.

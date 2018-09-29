@@ -64,23 +64,23 @@ type Middleware = (
 ## Usage
 
 ```js
-const app = require("express")();
-const uuid = require("uuid/v4");
-const line = require("line-pay-sdk");
+const app = require('express')();
+const uuid = require('uuid/v4');
+const line = require('line-pay-sdk');
 
 const client = new line.Client({
-    channelId: "YOUR_LINE_PAY_CHANNEL_ID",
-    channelSecret: "YOUR_LINE_PAY_CHANNEL_SECRET",
+    channelId: 'YOUR_LINE_PAY_CHANNEL_ID',
+    channelSecret: 'YOUR_LINE_PAY_CHANNEL_SECRET',
 })
 
-app.use("/pay", client.middleware({
-    productName: "demo product",
+app.use('/pay', client.middleware({
+    productName: 'demo product',
     amount: 1,
-    currency: "JPY",
+    currency: 'JPY',
     orderId: uuid()
 }), (req, res, next) => {
     // Now payment should have been completed.
-    res.send("Payment has been completed.");
+    res.send('Payment has been completed.');
 });
 
 app.listen(5000);

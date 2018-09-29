@@ -22,8 +22,8 @@ needed. About issuing the token and secret, please refer to [Getting started wit
 
 ``` js
 const config = {
-  channelId: "YOUR_LINE_PAY_CHANNEL_ID",
-  channelSecret: "YOUR_LINE_PAY_CHANNEL_SECRET",
+  channelId: 'YOUR_LINE_PAY_CHANNEL_ID',
+  channelSecret: 'YOUR_LINE_PAY_CHANNEL_SECRET',
 };
 
 new line.Client(config);
@@ -36,29 +36,29 @@ Here is a synopsis of echoing webhook server with [Express](https://expressjs.co
 ``` js
 const express = require('express');
 const line = require('line-pay-sdk');
-const uuid = require("uuid/v4");
+const uuid = require('uuid/v4');
 
 const config = {
-  channelId: "YOUR_LINE_PAY_CHANNEL_ID",
-  channelSecret: "YOUR_LINE_PAY_CHANNEL_SECRET",
+  channelId: 'YOUR_LINE_PAY_CHANNEL_ID',
+  channelSecret: 'YOUR_LINE_PAY_CHANNEL_SECRET',
 };
 
 const app = express();
 // Router configuration to start payment flow
-app.use("/pay/reserve", (req, res) => {
+app.use('/pay/reserve', (req, res) => {
     const options = {
-        productName: "Apple",
+        productName: 'Apple',
         amount: 1,
-        currency: "JPY",
+        currency: 'JPY',
         orderId: uuid(),
-        confirmUrl: "http://localhost:5000/pay/confirm",
+        confirmUrl: 'http://localhost:5000/pay/confirm',
     }
 
     line.reservePayment(options).then((response) => {
         let reservation = options;
         reservation.transactionId = response.info.transactionId;
 
-        console.log("Reservation was made.");
+        console.log('Reservation was made.');
         console.log(reservation);
 
         // Save order information

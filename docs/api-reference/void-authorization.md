@@ -47,4 +47,4 @@ client.voidAuthorization(options)
 * 1903: Temporary Error. Please, try again later.
 * 1999: It does not match the requested information. (When re-trying a request)
 * 9000: Internal error
-# When an Error code 1900,1903,1999 occurs, allowing re-try.
+### When an Error code 1900,1903,1999 occurs, allowing re-try.

@@ -100,4 +100,4 @@ client.preApprovedPayment(options)
 * 1296: Invalid amount
 * 1298: The credit card payment declined.
 * 9000 : Internal error
-* When an error code 1281~287, 1290~1294 occurs, expire the regKey
+### When an error code 1281~287, 1290~1294 occurs, expire the regKey

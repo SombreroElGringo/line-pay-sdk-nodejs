@@ -108,8 +108,8 @@ To create a client instance in CommonJS:
 const line = require('line-pay-sdk');
 
 const client = new line.Client({
-    channelId: "YOUR_LINE_PAY_CHANNEL_ID",
-    channelSecret: "YOUR_LINE_PAY_CHANNEL_SECRET",
+    channelId: 'YOUR_LINE_PAY_CHANNEL_ID',
+    channelSecret: 'YOUR_LINE_PAY_CHANNEL_SECRET',
 })
 
 ...
@@ -123,7 +123,7 @@ To create a client instance in `ES6` or `Typescript`:
 
 ```typescript
 // ES6 modules or TypeScript
-import { Client } from 'line-pay-sdk';
+import { Client } from "line-pay-sdk";
 
 const client: Client = new Client({
     channelId: "YOUR_LINE_PAY_CHANNEL_ID",

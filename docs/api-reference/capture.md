@@ -80,4 +80,4 @@ client.capture(options)
 * 1296: Invalid amount
 * 1298: The credit card payment declined.
 * 9000: Internal error
-* When an Error code 1199,1280~1298 occurs, the transaction cancels automatically.
+### When an Error code 1199,1280~1298 occurs, the transaction cancels automatically.
