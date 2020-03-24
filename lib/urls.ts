@@ -89,7 +89,7 @@ export const paymentsPreApprovedPayExpire = (baseURL: string, regKey: string) =>
   apiURL(baseURL, `payments/preapprovedPay/${regKey}/expire`);
 
 function isEmpty(obj: object): boolean {
-  for (var prop in obj) {
+  for (const prop in obj) {
     if (obj.hasOwnProperty(prop)) {
       return false;
     }
