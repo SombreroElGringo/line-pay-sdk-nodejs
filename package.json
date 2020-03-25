@@ -33,7 +33,7 @@
   "dependencies": {
     "@types/express": "^4.16.0",
     "@types/express-session": "^1.15.10",
-    "@types/node": "^10.9.4",
+    "@types/node": "^10.17.17",
     "axios": "^0.19.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6"
@@ -45,7 +45,7 @@
     "nyc": "^13.0.1",
     "prettier": "^1.14.2",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.1",
+    "typescript": "^3.8.3",
     "vuepress": "^0.14.11"
   },
   "nyc": {

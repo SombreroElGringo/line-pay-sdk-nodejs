@@ -33,12 +33,12 @@ app.use("/pay/reserve", (req, res) => {
     amount: 1,
     currency: "JPY",
     orderId: uuid(),
-    confirmUrl: `http://localhost:${process.env.PORT || 5000}/pay/confirm`
+    confirmUrl: `http://localhost:${process.env.PORT ?? 5000}/pay/confirm`
   };
 
   client.reservePayment(options).then((response) => {
     let reservation = options;
-    
+
     console.log("Reservation was made!");
     console.log("Response: ", response);
 
@@ -48,7 +48,7 @@ app.use("/pay/reserve", (req, res) => {
 
 // Router configuration to recieve notification when user approves payment.
 app.use("/pay/confirm", (req, res) => {
-  if (!req.query.transactionId){
+  if (!req.query.transactionId) {
     throw new Error("Transaction Id not found.");
   }
 
@@ -74,11 +74,11 @@ app.use("/middleware", client.middleware({
   amount: 1,
   currency: "JPY",
   orderId: uuid(),
-  confirmUrl: `http://localhost:${process.env.PORT || 5000}/middleware/confirm`
+  confirmUrl: `http://localhost:${process.env.PORT ?? 5000}/middleware/confirm`
 }), (req, res, next) => {
   res.send("Payment has been completed.");
 });
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log(`Server is running on http://localhost:${process.env.PORT || 5000}`);
+app.listen(process.env.PORT ?? 5000, () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT ?? 5000}`);
 });
