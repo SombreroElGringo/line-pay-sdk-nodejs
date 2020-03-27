@@ -12,6 +12,12 @@ Using [npm](https://www.npmjs.com/):
 $ npm install line-pay-sdk
 ```
 
+Using [yarn](https://classic.yarnpkg.com/):
+
+``` bash
+$ yarn add line-pay-sdk
+```
+
 ## Getting Started
 
 Refer to [Getting Started](https://SombreroElGringo.github.io/line-pay-sdk-nodejs/getting-started/install.html).
